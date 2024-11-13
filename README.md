@@ -3,8 +3,14 @@
 - Create react app
 - Config tailwind css
   -Build Header
+  -Routing Our App
   - Login Form
   - Sign Up form
+    -Form Validation
+    -useRef Hooks
+    -Firebase Setup
+    -Deployed our app to production
+    -Create signup user Account
 
 # Features
 

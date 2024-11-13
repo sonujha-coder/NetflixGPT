@@ -1,8 +1,69 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Header from "./Header";
+import { checkValidate } from "../utils/validate.js";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { auth } from "../utils/firebase.js";
 
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
+  const [errMessage, setErrMessage] = useState(null);
+  const email = useRef(null);
+  const password = useRef(null);
+  //   const fullName = useRef(null);
+  const handleButtonClick = (e) => {
+    e.preventDefault();
+
+    //Validate Sign In Sign Up Form Data
+
+    const message = checkValidate(
+      //   fullName.current.value,
+      email.current.value,
+      password.current.value
+    );
+    setErrMessage(message);
+    if (message) return;
+
+    if (!isSignInForm) {
+      createUserWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          const user = userCredential.user;
+          console.log(user);
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrMessage(errorCode + "-" + errorMessage);
+          // ..
+        });
+    } else {
+      signInWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          const user = userCredential.user;
+          console.log(user);
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrMessage(errorCode + "-" + errorMessage);
+        });
+    }
+
+    // console.log(message);
+    // console.log(email.current.value);
+    // console.log(password.current.value);
+    // console.log(fullName.current.value);
+  };
   const toggleSignInForm = () => {
     setIsSignInForm(!isSignInForm);
   };
@@ -27,17 +88,23 @@ const Login = () => {
           />
         )}
         <input
+          ref={email}
           type="text"
           placeholder="Email Address"
           className="px-4  py-2 my-4 w-full bg-gray-700"
         />
 
         <input
+          ref={password}
           type="password"
           placeholder="Password"
           className="px-4  py-2 my-4 w-full bg-gray-700"
         />
-        <button className="p-4 my-4 bg-red-700 w-full rounded-xl">
+        <p className="text-red-500 font-bold text-sm">{errMessage}</p>
+        <button
+          className="p-4 my-4 bg-red-700 w-full rounded-xl"
+          onClick={handleButtonClick}
+        >
           {isSignInForm ? "Sign In" : "Sign Up"}
         </button>
         <p className="py-4 cursor-pointer" onClick={toggleSignInForm}>
