@@ -11,6 +11,10 @@
     -Firebase Setup
     -Deployed our app to production
     -Create signup user Account
+    -implement signIn user API
+    -created user store with user slice
+    -implemented Sign Out
+    - Fatch Movie for TMDB Movie
 
 # Features
 
